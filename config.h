@@ -1,0 +1,6 @@
+#ifndef BUILD_LOG_STATS_CONFIG_H
+#define BUILD_LOG_STATS_CONFIG_H
+
+#define BUILD_LOG_STATS_VERSION "0.1.0"
+
+#endif

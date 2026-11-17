@@ -1,0 +1,9 @@
+[build] starting
+src/main.c:10:5: warning: unused variable 'scratch'
+src/helper.c:20:7: error: missing ';'
+src/helper.c:21:7: note: expected declaration here
+src/main.c:30:2: WARNING: signedness mismatch
+ld: fatal error: cannot find symbol
+src/helper.c:40:1: NOTE: expanded from macro
+[build] warning counter: 2
+[build] completed

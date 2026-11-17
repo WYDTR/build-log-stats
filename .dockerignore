@@ -1,0 +1,7 @@
+.git
+app
+app.exe
+*.o
+work
+__pycache__
+.env

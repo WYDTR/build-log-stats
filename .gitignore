@@ -1,0 +1,7 @@
+app
+app.exe
+*.o
+__pycache__/
+*.pyc
+work/
+.env

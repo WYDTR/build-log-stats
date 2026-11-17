@@ -22,14 +22,14 @@ class RepairTests(unittest.TestCase):
         self.assertIn("helper.o: helper.c helper.h rules.h", healthy)
         broken = healthy.replace("helper.o: helper.c helper.h rules.h",
                                  "helper.o: helper.c helper.h", 1)
-        makefile.write_text(broken, encoding="utf-8")
+        makefile.write_text(broken, encoding="utf-8", newline="\n")
         return destination, broken, healthy
 
     def patchfile(self, directory, before, after):
         path = Path(directory) / "candidate.patch"
         path.write_text("".join(difflib.unified_diff(
             before.splitlines(True), after.splitlines(True),
-            fromfile="a/Makefile", tofile="b/Makefile")), encoding="utf-8")
+            fromfile="a/Makefile", tofile="b/Makefile")), encoding="utf-8", newline="\n")
         return path
 
     def test_real_dependency_repair_and_header_rebuild(self):

@@ -46,6 +46,7 @@ v0.2 默认忽略 ASCII 大小写，并通过 `rules.h` 配置是否统计 note�
 - [上传现有 Git 历史](docs/UPLOAD.md)
 - [服务器 E12 接入步骤](docs/INTEGRATION.md)
 - [可选验证配置的接口契约](integration/INTERFACE.md)
+- [本地验证结果及尚待服务器执行的检查](docs/VALIDATION.md)
 
 `main` 的功能、依赖、修复拒绝和安装兼容性测试均可通过 `make test check-deps` 运行。
 历史复现：`python3 integration/verify_history.py --out work/history-01`。

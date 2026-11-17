@@ -71,7 +71,7 @@ def verify(output):
         patchfile = output / "candidate.patch"
         patchfile.write_text("".join(difflib.unified_diff(
             broken.splitlines(True), repaired.splitlines(True),
-            fromfile="a/Makefile", tofile="b/Makefile")), encoding="utf-8")
+            fromfile="a/Makefile", tofile="b/Makefile")), encoding="utf-8", newline="\n")
         verdict = validate_build_log_stats(target, patchfile, output / "validation")
         if not verdict["accepted"]:
             raise ValueError(f"Historical repair rejected: {verdict}")

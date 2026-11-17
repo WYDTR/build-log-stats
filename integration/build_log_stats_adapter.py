@@ -69,7 +69,7 @@ def validate_build_log_stats(project, patchfile, evidence):
         helper_time = (sandbox / "helper.o").stat().st_mtime_ns
         main_time = (sandbox / "main.o").stat().st_mtime_ns
         time.sleep(1.05)
-        header.write_text(text.replace(old, new, 1), encoding="utf-8")
+        header.write_text(text.replace(old, new, 1), encoding="utf-8", newline="\n")
         run([make, "app"], sandbox, evidence / "incremental.log")
         changed_stats = json.loads(run(command, sandbox, evidence / "program-after.log"))
         checks["header_change"] = (

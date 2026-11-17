@@ -1,4 +1,5 @@
 #include "helper.h"
+#include "rules.h"
 
 #include <stdint.h>
 #include <stdlib.h>
@@ -30,12 +31,26 @@ static void strip_ansi(char *line) {
 }
 
 static int has_diagnostic(const char *line, const char *pattern) {
-    const char *match = line;
-    while ((match = strstr(match, pattern)) != NULL) {
-        if (match == line || !token_character((unsigned char)match[-1])) {
+    for (size_t start = 0; line[start] != '\0'; ++start) {
+        size_t pos = 0;
+        if (start > 0 && token_character((unsigned char)line[start - 1])) {
+            continue;
+        }
+        while (pattern[pos] != '\0' && line[start + pos] != '\0') {
+            unsigned char ch = (unsigned char)line[start + pos];
+#if LOG_STATS_IGNORE_CASE
+            if (ch >= 'A' && ch <= 'Z') {
+                ch = (unsigned char)(ch - 'A' + 'a');
+            }
+#endif
+            if (ch != (unsigned char)pattern[pos]) {
+                break;
+            }
+            ++pos;
+        }
+        if (pattern[pos] == '\0') {
             return 1;
         }
-        ++match;
     }
     return 0;
 }
@@ -43,11 +58,15 @@ static int has_diagnostic(const char *line, const char *pattern) {
 static void record_line(char *line, LogStats *stats) {
     ++stats->lines;
     strip_ansi(line);
-    /* Count one diagnostic per line, preferring errors over warnings. */
+    /* Count one diagnostic per line: error > warning > note. */
     if (has_diagnostic(line, "error:")) {
         ++stats->errors;
     } else if (has_diagnostic(line, "warning:")) {
         ++stats->warnings;
+#if LOG_STATS_COUNT_NOTES
+    } else if (has_diagnostic(line, "note:")) {
+        ++stats->notes;
+#endif
     }
 }
 

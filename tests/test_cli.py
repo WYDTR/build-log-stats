@@ -22,10 +22,11 @@ class CommandLineTests(unittest.TestCase):
     def test_fixture_file(self):
         result = self.run_app("--json", "tests/fixtures/compiler.log")
         self.assertEqual(result.returncode, 0, result.stderr)
-        self.assertEqual(json.loads(result.stdout), {"lines": 9, "warnings": 1, "errors": 2})
+        self.assertEqual(json.loads(result.stdout),
+                         {"lines": 9, "warnings": 2, "errors": 2, "notes": 2})
 
     def test_empty_input(self):
-        self.assertEqual(self.stats(b""), {"lines": 0, "warnings": 0, "errors": 0})
+        self.assertEqual(self.stats(b""), {"lines": 0, "warnings": 0, "errors": 0, "notes": 0})
 
     def test_final_line_without_newline(self):
         self.assertEqual(self.stats(b"warning: last line")["warnings"], 1)
@@ -33,7 +34,7 @@ class CommandLineTests(unittest.TestCase):
 
     def test_crlf_and_blank_lines(self):
         result = self.stats(b"warning: first\r\n\r\nerror: third\r\n")
-        self.assertEqual(result, {"lines": 3, "warnings": 1, "errors": 1})
+        self.assertEqual(result, {"lines": 3, "warnings": 1, "errors": 1, "notes": 0})
 
     def test_ansi_colour_sequences(self):
         self.assertEqual(self.stats(b"file: \x1b[31merror:\x1b[0m bad\n")["errors"], 1)
@@ -52,6 +53,18 @@ class CommandLineTests(unittest.TestCase):
     def test_token_boundary(self):
         result = self.stats(b"myerror: no\nwarning_count: no\n")
         self.assertEqual((result["warnings"], result["errors"]), (0, 0))
+
+    def test_case_insensitive_labels(self):
+        result = self.stats(b"WARNING: a\nErRoR: b\nNoTe: c\n")
+        self.assertEqual(result, {"lines": 3, "warnings": 1, "errors": 1, "notes": 1})
+
+    def test_note_counts_and_priority(self):
+        result = self.stats(b"note: context\nwarning: a note: b\nerror: a note: b\n")
+        self.assertEqual(result, {"lines": 3, "warnings": 1, "errors": 1, "notes": 1})
+
+    def test_text_summary(self):
+        result = self.run_app("tests/fixtures/compiler.log")
+        self.assertEqual(result.stdout.strip(), b"lines=9 warnings=2 errors=2 notes=2")
 
     def test_utf8_context(self):
         self.assertEqual(self.stats("编译器: warning: 提示\n".encode())["warnings"], 1)
@@ -89,7 +102,7 @@ class CommandLineTests(unittest.TestCase):
 
     def test_help_and_version(self):
         self.assertIn(b"Usage:", self.run_app("--help").stdout)
-        self.assertEqual(self.run_app("--version").stdout.strip(), b"build-log-stats 0.1.0")
+        self.assertEqual(self.run_app("--version").stdout.strip(), b"build-log-stats 0.2.0")
 
 
 if __name__ == "__main__":

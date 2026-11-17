@@ -8,6 +8,7 @@ typedef struct {
     size_t lines;
     size_t warnings;
     size_t errors;
+    size_t notes;
 } LogStats;
 
 enum {

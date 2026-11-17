@@ -62,11 +62,11 @@ int main(int argc, char **argv) {
         return 3;
     }
     if (json) {
-        printf("{\"lines\":%zu,\"warnings\":%zu,\"errors\":%zu}\n",
-               stats.lines, stats.warnings, stats.errors);
+        printf("{\"lines\":%zu,\"warnings\":%zu,\"errors\":%zu,\"notes\":%zu}\n",
+               stats.lines, stats.warnings, stats.errors, stats.notes);
     } else {
-        printf("lines=%zu warnings=%zu errors=%zu\n",
-               stats.lines, stats.warnings, stats.errors);
+        printf("lines=%zu warnings=%zu errors=%zu notes=%zu\n",
+               stats.lines, stats.warnings, stats.errors, stats.notes);
     }
     if (fflush(stdout) != 0) {
         fputs("Cannot write output\n", stderr);

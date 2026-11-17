@@ -17,8 +17,7 @@ app: main.o helper.o
 main.o: main.c helper.h config.h
 	$(CC) $(CFLAGS) $(WARNINGS) -c main.c -o main.o
 
-# Controlled E12 target: the new rules.h dependency is deliberately omitted.
-helper.o: helper.c helper.h
+helper.o: helper.c helper.h rules.h
 	$(CC) $(CFLAGS) $(WARNINGS) -c helper.c -o helper.o
 
 test: app

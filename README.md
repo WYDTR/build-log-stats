@@ -34,7 +34,19 @@ v0.2 默认忽略 ASCII 大小写，并通过 `rules.h` 配置是否统计 note�
 
 样例结果：`{"lines":9,"warnings":2,"errors":2,"notes":2}`。
 
-当前实验目标版本故意遗漏 `helper.o -> rules.h`，详情见 `docs/EXPERIMENT.md`。
-该目标版本的干净构建和功能测试可以通过，`make check-deps` 应报告漏依赖。
+`main` 已修复 `helper.o -> rules.h` 的漏依赖，`make check-deps` 应通过。
+历史标签 `e12-target` 保留明确注入的漏依赖，供 E12 检测和修复；详情见 `docs/EXPERIMENT.md`。
 
 程序不依赖 Python；Python 标准库仅用于测试、清理和开发检查。
+
+## 开发历史与 E12 接入
+
+- `e12-base`：基础实现；`e12-target`：功能扩展及受控漏依赖；`e12-fixed`：修复与回归验证。
+- [实验来源和故障说明](docs/EXPERIMENT.md)
+- [上传现有 Git 历史](docs/UPLOAD.md)
+- [服务器 E12 接入步骤](docs/INTEGRATION.md)
+- [可选验证配置的接口契约](integration/INTERFACE.md)
+
+`main` 的功能、依赖、修复拒绝和安装兼容性测试均可通过 `make test check-deps` 运行。
+历史复现：`python3 integration/verify_history.py --out work/history-01`。
+该命令保存真实执行日志，包含 C0/C1 的功能和依赖差异，以及补丁应用后的头文件重建结果。

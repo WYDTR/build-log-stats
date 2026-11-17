@@ -1,0 +1,24 @@
+name: build-log-stats
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Build, functional tests, incremental regression and dependency checks
+        run: make clean app test check-deps
+      - name: Reproduce base, controlled target and accepted repair
+        run: python3 integration/verify_history.py --out work/ci-history

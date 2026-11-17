@@ -1,0 +1,36 @@
+{
+  "schema_version": "build-log-stats-dataset-1",
+  "project": "build-log-stats",
+  "maintainer_student_id": "241880331",
+  "purpose": "Count compiler diagnostics in build logs for local and CI use",
+  "source_kind": "newly-developed-course-project",
+  "development_method": "New implementation developed in this session with AI coding assistance; actual Git development history is preserved",
+  "base_commit": "48d8fbf69b100637e1edc085a11c5660ec5a406e",
+  "target_commit": "2f45f30f288f85c824018202337509f7b569a1f7",
+  "fixed_commit": "ebfb6f57136dd01b375e4b966e5d3606493202af",
+  "committed_at": {
+    "base_commit": "2026-11-17T16:05:57+08:00",
+    "target_commit": "2026-11-17T16:08:34+08:00",
+    "fixed_commit": "2026-11-17T16:22:27+08:00"
+  },
+  "base_functionality": "Case-sensitive error/warning line counts, file/stdin, JSON/text, ANSI colour, long lines",
+  "target_functionality": "Configurable case-insensitive matching and note counts through a new rules.h",
+  "fault_origin": "Controlled experiment: deliberately omit helper.o -> rules.h in the target development commit",
+  "docker_fault_origin": "Controlled experiment: Dockerfile.broken intentionally omits make and the C toolchain",
+  "expected_missing": [
+    {
+      "type": "MISSING",
+      "target": "helper.o",
+      "dependency": "rules.h"
+    }
+  ],
+  "expected_output": "{\"lines\":9,\"warnings\":2,\"errors\":2,\"notes\":2}",
+  "validation_profile": "build-log-stats-v1",
+  "header_change": {
+    "file": "rules.h",
+    "before": "#define LOG_STATS_COUNT_NOTES 1",
+    "after": "#define LOG_STATS_COUNT_NOTES 0",
+    "expected_notes": 0
+  },
+  "candidate_sha256": "1a82508f28f89b5cf407f507c765e88ab1dbadbeafee42b3ee75898a67bfc842"
+}
